@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinder_agro/core/app_colors.dart';
+import 'package:tinder_agro/views/screens/explorer.dart';
+import 'package:tinder_agro/views/screens/root.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -42,7 +44,9 @@ class _WelcomeState extends State<Welcome> {
             ),
             SizedBox(height: 40.0),
             ElevatedButton(
-              onPressed: () => (),
+              onPressed: () => (Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (context) => const Root()))),
               style: ElevatedButton.styleFrom(
                 foregroundColor: AppColors.white,
                 backgroundColor: AppColors.primary,

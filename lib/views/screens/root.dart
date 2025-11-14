@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinder_agro/core/app_colors.dart';
 import 'package:tinder_agro/views/screens/explorer.dart';
-import 'package:tinder_agro/views/screens/welcome.dart';
+import 'package:tinder_agro/views/screens/settings.dart';
 
 class Root extends StatefulWidget {
   const Root({super.key});
@@ -18,7 +18,7 @@ class _RootState extends State<Root> {
   @override
   void initState() {
     super.initState();
-    pages = [Explorer(), Welcome()];
+    pages = [Explorer(), Settings()];
   }
 
   void _onitemTapped(int index) {
