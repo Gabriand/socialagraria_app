@@ -1,3 +1,2 @@
-# tinder_agro
-
-A new Flutter project.
+# Social Agraria App
+A Flutter project.
