@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tinder_agro/core/app_colors.dart';
+import 'package:social_agraria/core/app_colors.dart';
 
 class CardWidget extends StatelessWidget {
   final double height;
@@ -12,7 +12,7 @@ class CardWidget extends StatelessWidget {
     this.width,
     required this.height,
     required this.child,
-    this.margin = const EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
+    this.margin = const EdgeInsets.symmetric(horizontal: 0.0, vertical: 16.0),
   });
 
   @override
@@ -20,8 +20,16 @@ class CardWidget extends StatelessWidget {
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(25.0),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(14.0),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withAlpha(20),
+            spreadRadius: 0,
+            blurRadius: 8.0,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       margin: margin,
       child: child,

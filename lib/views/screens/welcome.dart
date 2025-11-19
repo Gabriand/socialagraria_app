@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tinder_agro/core/app_colors.dart';
-import 'package:tinder_agro/views/screens/explorer.dart';
-import 'package:tinder_agro/views/screens/root.dart';
+import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/views/screens/root.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
