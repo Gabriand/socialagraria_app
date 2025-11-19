@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tinder_agro/core/app_colors.dart';
-import 'package:tinder_agro/views/screens/explorer.dart';
-import 'package:tinder_agro/views/screens/settings.dart';
+import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/views/screens/explorer.dart';
+import 'package:social_agraria/views/screens/settings.dart';
 
 class Root extends StatefulWidget {
   const Root({super.key});
@@ -37,6 +37,7 @@ class _RootState extends State<Root> {
           highlightColor: Colors.transparent,
         ),
         child: NavigationBar(
+          backgroundColor: AppColors.white,
           selectedIndex: selectedIndex,
           onDestinationSelected: _onitemTapped,
           elevation: 0,
@@ -47,13 +48,13 @@ class _RootState extends State<Root> {
           ) {
             if (states.contains(WidgetState.selected)) {
               return const TextStyle(
-                fontSize: 15,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppColors.primary,
               );
             }
             return const TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: FontWeight.w600,
               color: AppColors.accent,
             );
@@ -64,7 +65,7 @@ class _RootState extends State<Root> {
               selectedIcon: Icon(
                 Icons.explore,
                 color: AppColors.primary,
-                size: 29.0,
+                size: 28.0,
               ),
               label: 'Explorar',
             ),
@@ -73,7 +74,7 @@ class _RootState extends State<Root> {
               selectedIcon: Icon(
                 Icons.settings,
                 color: AppColors.primary,
-                size: 29.0,
+                size: 28.0,
               ),
               label: 'Ajustes',
             ),

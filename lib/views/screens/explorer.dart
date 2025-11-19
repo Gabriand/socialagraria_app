@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tinder_agro/core/app_colors.dart';
+import 'package:social_agraria/core/app_colors.dart';
 
 class Explorer extends StatefulWidget {
   const Explorer({super.key});
