@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
 import 'package:social_agraria/views/screens/explorer.dart';
+import 'package:social_agraria/views/screens/user_match.dart';
 import 'package:social_agraria/views/screens/settings.dart';
 
 class Root extends StatefulWidget {
@@ -18,7 +19,7 @@ class _RootState extends State<Root> {
   @override
   void initState() {
     super.initState();
-    pages = [Explorer(), Settings()];
+    pages = [Explorer(), UserMatch(), Settings()];
   }
 
   void _onitemTapped(int index) {
@@ -68,6 +69,15 @@ class _RootState extends State<Root> {
                 size: 28.0,
               ),
               label: 'Explorar',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.favorite_border, color: AppColors.accent),
+              selectedIcon: Icon(
+                Icons.favorite,
+                color: AppColors.primary,
+                size: 28.0,
+              ),
+              label: 'Matches',
             ),
             NavigationDestination(
               icon: Icon(Icons.settings_outlined, color: AppColors.accent),
