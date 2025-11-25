@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/core/app_dimens.dart';
+import 'package:social_agraria/core/page_transitions.dart';
+import 'package:social_agraria/views/screens/root.dart';
 
 class Match extends StatelessWidget {
   const Match({super.key});
@@ -10,7 +13,7 @@ class Match extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: AppDimens.paddingLarge),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -32,46 +35,54 @@ class Match extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              SizedBox(height: AppDimens.espacioXLarge + 8),
 
-              const Text(
+              Text(
                 "¡Es un Match!",
                 style: TextStyle(
-                  fontSize: 42,
+                  fontSize: AppDimens.fontSizeTitleLarge + 10,
                   fontWeight: FontWeight.w900,
                   color: AppColors.primaryDarker,
                 ),
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: AppDimens.espacioSmall + 4),
 
-              const Text(
+              Text(
                 "A ambos os habéis gustado.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: AppDimens.fontSizeSubtitle + 2,
                   height: 1.4,
                   color: AppColors.primaryDarker,
                 ),
               ),
 
-              const SizedBox(height: 40),
+              SizedBox(height: AppDimens.espacioXLarge + 8),
 
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppDimens.paddingMedium + 2,
+                    ),
                     backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40),
+                      borderRadius: BorderRadius.circular(
+                        AppDimens.spacing2XLarge,
+                      ),
                     ),
                   ),
-                  onPressed: () {},
-                  child: const Text(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      PageTransitions.fade(const Root(initialIndex: 1)),
+                    );
+                  },
+                  child: Text(
                     "Ver Mis Matches",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: AppDimens.fontSizeSubtitle + 2,
                       fontWeight: FontWeight.w600,
                       color: AppColors.white,
                     ),
@@ -79,14 +90,21 @@ class Match extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 25),
+              SizedBox(height: AppDimens.espacioLarge + 1),
 
-              const Text(
-                "Continuar Explorando",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primaryDarker,
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    PageTransitions.fade(const Root(initialIndex: 0)),
+                  );
+                },
+                child: Text(
+                  "Continuar Explorando",
+                  style: TextStyle(
+                    fontSize: AppDimens.fontSizeSubtitle + 2,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryDarker,
+                  ),
                 ),
               ),
             ],

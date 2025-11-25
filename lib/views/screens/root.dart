@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/views/screens/profile.dart';
 import 'package:social_agraria/views/screens/explorer.dart';
 import 'package:social_agraria/views/screens/user_match.dart';
 import 'package:social_agraria/views/screens/settings.dart';
 
 class Root extends StatefulWidget {
-  const Root({super.key});
+  final int initialIndex;
+
+  const Root({super.key, this.initialIndex = 0});
 
   @override
   State<Root> createState() => _RootState();
 }
 
 class _RootState extends State<Root> {
-  int selectedIndex = 0;
+  late int selectedIndex;
 
   late final List<Widget> pages;
 
   @override
   void initState() {
     super.initState();
-    pages = [Explorer(), UserMatch(), Settings()];
+    selectedIndex = widget.initialIndex;
+    pages = [Explorer(), UserMatch(), Profile(), Settings()];
   }
 
   void _onitemTapped(int index) {
@@ -31,6 +35,7 @@ class _RootState extends State<Root> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: pages[selectedIndex],
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
@@ -78,6 +83,15 @@ class _RootState extends State<Root> {
                 size: 28.0,
               ),
               label: 'Matches',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline, color: AppColors.accent),
+              selectedIcon: Icon(
+                Icons.person,
+                color: AppColors.primary,
+                size: 28.0,
+              ),
+              label: 'Perfil',
             ),
             NavigationDestination(
               icon: Icon(Icons.settings_outlined, color: AppColors.accent),

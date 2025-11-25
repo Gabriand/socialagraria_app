@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/core/app_dimens.dart';
+import 'package:social_agraria/core/page_transitions.dart';
+import 'package:social_agraria/views/screens/basic_info.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
@@ -24,41 +27,50 @@ class _CreateAccountState extends State<CreateAccount> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.arrow_back, size: 32, color: AppColors.primaryDarker),
+            IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                size: 32,
+                color: AppColors.primaryDarker,
+              ),
+              onPressed: () => Navigator.pop(context),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
 
-            const SizedBox(height: 28),
+            SizedBox(height: AppDimens.espacioLarge),
 
-            const Text(
+            Text(
               "Crea tu Cuenta",
               style: TextStyle(
-                fontSize: 40,
+                fontSize: AppDimens.fontSizeTitleLarge,
                 fontWeight: FontWeight.w800,
                 color: AppColors.primaryDarker,
               ),
             ),
 
-            const SizedBox(height: 10),
+            SizedBox(height: AppDimens.espacioSmall),
 
-            const Text(
+            Text(
               "Usa tu correo electrónico institucional para comenzar.",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: AppDimens.fontSizeSubtitle,
                 height: 1.4,
                 color: AppColors.primaryDarker,
               ),
             ),
 
-            const SizedBox(height: 40),
+            SizedBox(height: AppDimens.spacing2XLarge),
 
-            const Text(
+            Text(
               "Correo Electrónico",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: AppDimens.fontSizeSubtitle,
                 fontWeight: FontWeight.w700,
                 color: AppColors.primaryDarker,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: AppDimens.espacioSmall),
 
             _inputBox(
               icon: Icons.email_outlined,
@@ -67,12 +79,12 @@ class _CreateAccountState extends State<CreateAccount> {
               onChanged: (_) {},
             ),
 
-            const SizedBox(height: 28),
+            SizedBox(height: AppDimens.espacioLarge),
 
-            const Text(
+            Text(
               "Contraseña",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: AppDimens.fontSizeSubtitle,
                 fontWeight: FontWeight.w700,
                 color: AppColors.primaryDarker,
               ),
@@ -93,12 +105,12 @@ class _CreateAccountState extends State<CreateAccount> {
               onChanged: (v) => setState(() => password = v),
             ),
 
-            const SizedBox(height: 28),
+            SizedBox(height: AppDimens.espacioLarge),
 
-            const Text(
+            Text(
               "Confirmar Contraseña",
               style: TextStyle(
-                fontSize: 18,
+                fontSize: AppDimens.fontSizeSubtitle,
                 fontWeight: FontWeight.w700,
                 color: AppColors.primaryDarker,
               ),
@@ -132,23 +144,27 @@ class _CreateAccountState extends State<CreateAccount> {
               "Al menos un símbolo especial",
             ),
 
-            const SizedBox(height: 50),
+            SizedBox(height: AppDimens.spacing2XLarge),
 
             SizedBox(
               width: double.infinity,
+              height: AppDimens.buttonHeightLarge,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryDarker,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusRound),
                   ),
                 ),
-                onPressed: () {},
-                child: const Text(
+                onPressed: () {
+                  Navigator.of(
+                    context,
+                  ).push(PageTransitions.slideFromRight(const BasicInfo()));
+                },
+                child: Text(
                   "Siguiente",
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: AppDimens.fontSizeSubtitle,
                     fontWeight: FontWeight.w600,
                     color: AppColors.white,
                   ),
@@ -173,7 +189,7 @@ class _CreateAccountState extends State<CreateAccount> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(AppDimens.radiusMedium),
         border: Border.all(color: AppColors.primary, width: 2),
       ),
       child: Padding(
@@ -210,7 +226,10 @@ class _CreateAccountState extends State<CreateAccount> {
         const SizedBox(width: 12),
         Text(
           text,
-          style: const TextStyle(fontSize: 18, color: AppColors.primaryDarker),
+          style: TextStyle(
+            fontSize: AppDimens.fontSizeSubtitle,
+            color: AppColors.primaryDarker,
+          ),
         ),
       ],
     );

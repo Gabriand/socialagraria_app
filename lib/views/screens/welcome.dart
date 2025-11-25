@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/core/app_dimens.dart';
+import 'package:social_agraria/core/page_transitions.dart';
 import 'package:social_agraria/views/screens/root.dart';
+import 'package:social_agraria/views/screens/user_login.dart';
+import 'package:social_agraria/views/screens/simple_text.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -13,7 +17,8 @@ class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(backgroundColor: AppColors.background),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -23,7 +28,7 @@ class _WelcomeState extends State<Welcome> {
               height: 130.0,
               decoration: BoxDecoration(
                 color: AppColors.accent,
-                borderRadius: BorderRadius.circular(100.0),
+                borderRadius: BorderRadius.circular(AppDimens.radiusRound),
               ),
               child: Icon(
                 Icons.school_outlined,
@@ -35,17 +40,17 @@ class _WelcomeState extends State<Welcome> {
             Text(
               'La chispa universitaria empieza aquí!',
               style: TextStyle(
-                fontSize: 31.0,
+                fontSize: AppDimens.fontSizeTitleLarge,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primary,
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 40.0),
+            SizedBox(height: AppDimens.spacing2XLarge),
             ElevatedButton(
-              onPressed: () => (Navigator.of(
+              onPressed: () => Navigator.of(
                 context,
-              ).push(MaterialPageRoute(builder: (context) => const Root()))),
+              ).push(PageTransitions.fade(const Root())),
               style: ElevatedButton.styleFrom(
                 foregroundColor: AppColors.white,
                 backgroundColor: AppColors.primary,
@@ -61,7 +66,9 @@ class _WelcomeState extends State<Welcome> {
             ),
             SizedBox(height: 10.0),
             TextButton(
-              onPressed: () => (),
+              onPressed: () => Navigator.of(
+                context,
+              ).push(PageTransitions.slideFromRight(const UserLogin())),
               child: Text(
                 'Iniciar Sesión',
                 style: TextStyle(
@@ -71,11 +78,24 @@ class _WelcomeState extends State<Welcome> {
               ),
             ),
             SizedBox(height: 40.0),
-            Text(
-              'Terminos y politica de privacidad',
-              style: TextStyle(
-                color: AppColors.primary,
-                decoration: TextDecoration.underline,
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  PageTransitions.slideFromBottom(
+                    const SimpleText(
+                      title: 'Términos y Condiciones',
+                      body:
+                          'Aquí van los términos y condiciones de uso de la aplicación...',
+                    ),
+                  ),
+                );
+              },
+              child: Text(
+                'Terminos y politica de privacidad',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ],

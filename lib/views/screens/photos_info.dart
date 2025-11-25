@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/core/app_dimens.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:social_agraria/views/screens/affiliation_info.dart';
 
 class PhotosInfo extends StatefulWidget {
   const PhotosInfo({super.key});
@@ -68,19 +70,19 @@ class _PhotosInfoState extends State<PhotosInfo> {
                     constraints: const BoxConstraints(),
                   ),
                   const SizedBox(height: 30),
-                  const Text(
+                  Text(
                     "¡Muestra tu mejor lado!",
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: AppDimens.fontSizeTitleLarge,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primaryDarker,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppDimens.radiusSmall),
                   Text(
                     "Sube al menos 2 fotos para continuar. ¡Más es mejor!",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: AppDimens.fontSizeBody,
                       color: AppColors.primaryDarker.withValues(alpha: 0.7),
                     ),
                   ),
@@ -155,7 +157,15 @@ class _PhotosInfoState extends State<PhotosInfo> {
                     width: double.infinity,
                     height: 56,
                     child: ElevatedButton(
-                      onPressed: _uploadedCount >= 2 ? () {} : null,
+                      onPressed: _uploadedCount >= 2
+                          ? () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const AffiliationInfo(),
+                                ),
+                              );
+                            }
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _uploadedCount >= 2
                             ? AppColors.primaryDarker
@@ -180,7 +190,13 @@ class _PhotosInfoState extends State<PhotosInfo> {
                   ),
                   const SizedBox(height: 12),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AffiliationInfo(),
+                        ),
+                      );
+                    },
                     child: Text(
                       "Omitir por ahora",
                       style: TextStyle(

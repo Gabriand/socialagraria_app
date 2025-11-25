@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/core/app_dimens.dart';
+import 'package:social_agraria/core/app_text_styles.dart';
 
 class Filter extends StatefulWidget {
   const Filter({super.key});
@@ -39,17 +41,12 @@ class _FilterState extends State<Filter> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
-        elevation: 0,
-        leading: Icon(Icons.arrow_back, color: AppColors.primaryDarker),
-        centerTitle: true,
-        title: Text(
-          "Filtros",
-          style: TextStyle(
-            color: AppColors.primaryDarker,
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-          ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: AppColors.primaryDarker),
+          onPressed: () => Navigator.pop(context),
         ),
+        centerTitle: true,
+        title: Text('Filtros', style: AppTextStyles.titleMedium),
       ),
 
       body: SingleChildScrollView(
@@ -143,7 +140,9 @@ class _FilterState extends State<Filter> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       color: AppColors.background,
-                      borderRadius: BorderRadius.circular(40),
+                      borderRadius: BorderRadius.circular(
+                        AppDimens.radiusRound,
+                      ),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
