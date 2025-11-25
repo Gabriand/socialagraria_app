@@ -55,7 +55,7 @@ class _ExplorerState extends State<Explorer> {
               decoration: BoxDecoration(
                 color: AppColors.primaryDarkest,
                 image: DecorationImage(
-                  image: AssetImage('assets/images/usuarioTest.jpg'),
+                  image: AssetImage('assets/images/Erika.jpg'),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(40.0),
@@ -75,7 +75,7 @@ class _ExplorerState extends State<Explorer> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Saimon, 22',
+                      'Erika, 30',
                       style: TextStyle(
                         color: AppColors.white,
                         fontSize: 28.0,
@@ -164,12 +164,12 @@ class _ExplorerState extends State<Explorer> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.sports_soccer_outlined,
+                                Icons.airplane_ticket_outlined,
                                 color: AppColors.white,
                               ),
                               SizedBox(width: 5.0),
                               Text(
-                                'Fútbol',
+                                'Viaje',
                                 style: TextStyle(color: AppColors.white),
                               ),
                             ],
