@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/core/app_dimens.dart';
+import 'package:social_agraria/core/app_text_styles.dart';
+import 'package:social_agraria/core/page_transitions.dart';
 import 'package:social_agraria/views/screens/simple_text.dart';
+import 'package:social_agraria/views/screens/welcome.dart';
 import 'package:social_agraria/widgets/background_card.dart';
 import 'package:social_agraria/widgets/horizontal_separator.dart';
 
@@ -19,15 +23,12 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(
-          'Ajustes',
-          style: TextStyle(
-            color: AppColors.primaryDarker,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        backgroundColor: AppColors.background,
+        automaticallyImplyLeading: false,
         centerTitle: true,
+        title: Text('Ajustes', style: AppTextStyles.titleMedium),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -40,7 +41,7 @@ class _SettingsState extends State<Settings> {
                 style: TextStyle(
                   color: AppColors.primaryDarker,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
+                  fontSize: AppDimens.fontSizeSubtitle,
                 ),
               ),
               CardWidget(
@@ -94,7 +95,9 @@ class _SettingsState extends State<Settings> {
                             value: _selectedLanguage,
                             underline: const SizedBox(),
                             dropdownColor: AppColors.white,
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: BorderRadius.circular(
+                              AppDimens.radiusSmall,
+                            ),
                             menuMaxHeight: 220.0,
                             menuWidth: 100.0,
                             icon: Icon(
@@ -232,13 +235,14 @@ class _SettingsState extends State<Settings> {
               CardWidget(
                 margin: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                 height: 60.0,
-                child: Center(
-                  child: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        // Acción para cerrar sesión
-                      });
-                    },
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      PageTransitions.fade(const Welcome()),
+                      (route) => false,
+                    );
+                  },
+                  child: Center(
                     child: Text(
                       'Cerrar Sesión',
                       style: TextStyle(
@@ -253,13 +257,11 @@ class _SettingsState extends State<Settings> {
               CardWidget(
                 margin: const EdgeInsets.only(top: 10.0, bottom: 16.0),
                 height: 60.0,
-                child: Center(
-                  child: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        // Acción para eliminar la cuenta
-                      });
-                    },
+                child: InkWell(
+                  onTap: () {
+                    // No hace nada
+                  },
+                  child: Center(
                     child: Text(
                       'Eliminar Cuenta',
                       style: TextStyle(
@@ -305,8 +307,8 @@ class _SettingsState extends State<Settings> {
                             ),
                             onPressed: () {
                               Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const SimpleText(
+                                PageTransitions.slideFromRight(
+                                  const SimpleText(
                                     title: 'Términos y Condiciones',
                                     body:
                                         'Aquí van los términos y condiciones...',
@@ -341,8 +343,8 @@ class _SettingsState extends State<Settings> {
                             ),
                             onPressed: () {
                               Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const SimpleText(
+                                PageTransitions.slideFromRight(
+                                  const SimpleText(
                                     title: 'Política de Privacidad',
                                     body: 'Aquí van las Políticas...',
                                   ),

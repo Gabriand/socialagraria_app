@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/core/app_dimens.dart';
+import 'package:social_agraria/views/screens/additional_info.dart';
 
 class AffiliationInfo extends StatefulWidget {
   const AffiliationInfo({super.key});
@@ -35,6 +37,13 @@ class _AfiliacionUniversitariaPageState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: AppColors.primaryDarker),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(25),
@@ -50,20 +59,23 @@ class _AfiliacionUniversitariaPageState
 
               const SizedBox(height: 20),
 
-              const Text(
+              Text(
                 "Afiliación Universitaria",
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: AppDimens.fontSizeTitleLarge,
                   fontWeight: FontWeight.w700,
                   color: AppColors.primaryDarker,
                 ),
               ),
 
-              const SizedBox(height: 10),
+              SizedBox(height: AppDimens.espacioSmall),
 
-              const Text(
+              Text(
                 "Confirma tu universidad y facultad para continuar.",
-                style: TextStyle(fontSize: 18, color: AppColors.primaryDarker),
+                style: TextStyle(
+                  fontSize: AppDimens.fontSizeSubtitle,
+                  color: AppColors.primaryDarker,
+                ),
               ),
 
               const SizedBox(height: 45),
@@ -156,7 +168,13 @@ class _AfiliacionUniversitariaPageState
                     ),
                     elevation: 6,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const AdditionalInfo(),
+                      ),
+                    );
+                  },
                   child: const Text(
                     "Siguiente",
                     style: TextStyle(

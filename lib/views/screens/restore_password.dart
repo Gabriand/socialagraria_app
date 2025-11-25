@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/core/app_dimens.dart';
 
 class RestorePassword extends StatefulWidget {
   const RestorePassword({super.key});
@@ -23,7 +24,7 @@ class _RestorePasswordState extends State<RestorePassword> {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () => Navigator.pop(context),
                     icon: const Icon(
                       Icons.arrow_back,
                       size: 28,
@@ -33,64 +34,64 @@ class _RestorePasswordState extends State<RestorePassword> {
                 ],
               ),
 
-              const Text(
+              Text(
                 "Recuperar Contraseña",
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: AppDimens.fontSizeTitleLarge,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryDarker,
                 ),
               ),
 
-              const SizedBox(height: 140),
+              SizedBox(height: AppDimens.spacing2XLarge),
 
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 2),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Text(
                   "Ingresa tu correo electrónico universitario para recibir las instrucciones "
                   "y restablecer tu contraseña.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: AppDimens.fontSizeSubtitle,
                     color: AppColors.primaryDarker,
                     height: 1.4,
                   ),
                 ),
               ),
 
-              const SizedBox(height: 40),
+              SizedBox(height: AppDimens.spacing2XLarge),
 
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Correo Electrónico",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: AppDimens.fontSizeSubtitle,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primaryDarker,
                   ),
                 ),
               ),
 
-              const SizedBox(height: 10),
+              SizedBox(height: AppDimens.espacioSmall),
 
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.circular(22),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusMedium),
                   border: Border.all(color: AppColors.primaryDarker, width: 1),
                 ),
                 child: Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: TextField(
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "tucorreo@universidad.edu",
                           hintStyle: TextStyle(
                             color: AppColors.accent,
-                            fontSize: 18,
+                            fontSize: AppDimens.fontSizeSubtitle,
                           ),
                         ),
                       ),
@@ -103,23 +104,25 @@ class _RestorePasswordState extends State<RestorePassword> {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              SizedBox(height: AppDimens.spacing2XLarge),
 
               SizedBox(
                 width: double.infinity,
-                height: 60,
+                height: AppDimens.buttonHeightLarge,
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryDarker,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(
+                        AppDimens.radiusMedium,
+                      ),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Enviar Instrucciones",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: AppDimens.fontSizeSubtitle,
                       fontWeight: FontWeight.bold,
                       color: AppColors.white,
                     ),
@@ -130,14 +133,14 @@ class _RestorePasswordState extends State<RestorePassword> {
               const Spacer(),
 
               GestureDetector(
-                onTap: () {},
+                onTap: () => Navigator.pop(context),
                 child: const Padding(
                   padding: EdgeInsets.only(bottom: 25),
                   child: Text(
                     "¿Recuerdas tu contraseña? Inicia Sesión",
                     style: TextStyle(
                       color: AppColors.primaryDarker,
-                      fontSize: 16,
+                      fontSize: AppDimens.fontSizeBody,
                       decoration: TextDecoration.underline,
                       decorationColor: AppColors.primaryDarker,
                     ),

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/core/app_dimens.dart';
+import 'package:social_agraria/core/page_transitions.dart';
+import 'package:social_agraria/views/screens/root.dart';
+import 'package:social_agraria/views/screens/create_account.dart';
+import 'package:social_agraria/views/screens/restore_password.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -35,23 +40,23 @@ class _LoginState extends State<Login> {
                     'Iniciar Sesión',
                     style: TextStyle(
                       color: AppColors.primaryDarker,
-                      fontSize: 36,
+                      fontSize: AppDimens.fontSizeTitleLarge,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppDimens.espacioSmall),
 
                   Text(
                     'Ingresa a tu cuenta para continuar.',
                     style: TextStyle(
                       color: AppColors.primaryDarker,
-                      fontSize: 18,
+                      fontSize: AppDimens.fontSizeSubtitle,
                     ),
                     textAlign: TextAlign.center,
                   ),
 
-                  const SizedBox(height: 40),
+                  const SizedBox(height: AppDimens.spacing2XLarge),
 
                   _buildInputField(
                     label: "Correo Electrónico",
@@ -70,18 +75,24 @@ class _LoginState extends State<Login> {
 
                   Container(
                     width: double.infinity,
-                    height: 60,
+                    height: AppDimens.buttonHeightLarge,
                     decoration: BoxDecoration(
                       color: AppColors.primaryDarker,
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(
+                        AppDimens.radiusMedium,
+                      ),
                     ),
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(
+                          context,
+                        ).pushReplacement(PageTransitions.fade(const Root()));
+                      },
                       child: const Text(
                         "Iniciar Sesión",
                         style: TextStyle(
                           color: AppColors.white,
-                          fontSize: 22,
+                          fontSize: AppDimens.fontSizeSubtitle,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -91,7 +102,11 @@ class _LoginState extends State<Login> {
                   const SizedBox(height: 30),
 
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageTransitions.slideFromRight(const RestorePassword()),
+                      );
+                    },
                     child: Text(
                       "¿Olvidaste tu contraseña?",
                       style: TextStyle(
@@ -116,7 +131,13 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            PageTransitions.slideFromRight(
+                              const CreateAccount(),
+                            ),
+                          );
+                        },
                         child: Text(
                           "Crear cuenta",
                           style: TextStyle(

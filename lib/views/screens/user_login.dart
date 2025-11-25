@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/core/app_dimens.dart';
+import 'package:social_agraria/core/page_transitions.dart';
+import 'package:social_agraria/views/screens/login.dart';
 
 class UserLogin extends StatefulWidget {
   const UserLogin({super.key});
@@ -19,54 +22,59 @@ class _UserLoginState extends State<UserLogin> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.school_outlined,
-                size: 120.0,
+                size: AppDimens.iconSizeXLarge * 2.5,
                 color: AppColors.primaryDarker,
               ),
 
-              const SizedBox(height: 30),
+              SizedBox(height: AppDimens.espacioLarge + 6),
 
-              const Text(
+              Text(
                 "Bienvenido",
                 style: TextStyle(
-                  fontSize: 36,
+                  fontSize: AppDimens.fontSizeTitleLarge + 4,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryDarker,
                 ),
               ),
 
-              const SizedBox(height: 10),
+              SizedBox(height: AppDimens.espacioSmall + 2),
 
-              const Text(
+              Text(
                 "Tu espacio exclusivo para conectar en la universidad.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 17, color: AppColors.primaryDarker),
+                style: TextStyle(
+                  fontSize: AppDimens.fontSizeSubtitle - 1,
+                  color: AppColors.primaryDarker,
+                ),
               ),
 
-              const SizedBox(height: 40),
+              SizedBox(height: AppDimens.spacing2XLarge),
 
               Container(
                 width: double.infinity,
-                height: 58,
+                height: AppDimens.buttonHeightMedium + 2,
                 decoration: BoxDecoration(
                   color: AppColors.primaryDarker,
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(
+                    AppDimens.radiusMedium - 2,
+                  ),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
                       'assets/images/icon-google.png',
-                      width: 28,
-                      height: 28,
+                      width: AppDimens.iconSizeLarge - 2,
+                      height: AppDimens.iconSizeLarge - 2,
                     ),
-                    const SizedBox(width: 10),
-                    const Text(
+                    SizedBox(width: AppDimens.espacioSmall + 2),
+                    Text(
                       "Ingresar con Google",
                       style: TextStyle(
                         color: AppColors.white,
-                        fontSize: 18,
+                        fontSize: AppDimens.fontSizeSubtitle,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -74,28 +82,37 @@ class _UserLoginState extends State<UserLogin> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: AppDimens.espacioLarge - 4),
 
-              Container(
-                width: double.infinity,
-                height: 58,
-                decoration: BoxDecoration(
-                  color: AppColors.accent,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Center(
-                  child: Text(
-                    "Ingresar con Cuenta",
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(
+                    context,
+                  ).push(PageTransitions.slideFromRight(const Login()));
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: AppDimens.buttonHeightMedium + 2,
+                  decoration: BoxDecoration(
+                    color: AppColors.accent,
+                    borderRadius: BorderRadius.circular(
+                      AppDimens.radiusMedium - 2,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Ingresar con Cuenta",
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: AppDimens.fontSizeSubtitle,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 35),
+              SizedBox(height: AppDimens.espacioXLarge + 3),
 
               const Text(
                 "Al ingresar, aceptas nuestros Términos de Servicio y\nPolítica de Privacidad.",
