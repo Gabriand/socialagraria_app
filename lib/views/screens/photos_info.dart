@@ -4,9 +4,12 @@ import 'package:social_agraria/core/app_dimens.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:social_agraria/views/screens/affiliation_info.dart';
+import 'package:social_agraria/models/registration_data.dart';
 
 class PhotosInfo extends StatefulWidget {
-  const PhotosInfo({super.key});
+  final RegistrationData registrationData;
+
+  const PhotosInfo({super.key, required this.registrationData});
 
   @override
   State<PhotosInfo> createState() => _PhotosInfoState();
@@ -15,6 +18,9 @@ class PhotosInfo extends StatefulWidget {
 class _PhotosInfoState extends State<PhotosInfo> {
   final List<File?> _images = List.filled(5, null);
   final ImagePicker _picker = ImagePicker();
+
+  // Getter para acceder a las imágenes desde otras pantallas
+  List<File?> get selectedImages => _images;
 
   Future<void> _pickImage(int index) async {
     try {
@@ -44,6 +50,18 @@ class _PhotosInfoState extends State<PhotosInfo> {
   }
 
   int get _uploadedCount => _images.where((img) => img != null).length;
+
+  void _continueToNextStep() {
+    // Las fotos se subirán al final del registro
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AffiliationInfo(
+          registrationData: widget.registrationData,
+          selectedImages: _images,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,13 +176,7 @@ class _PhotosInfoState extends State<PhotosInfo> {
                     height: 56,
                     child: ElevatedButton(
                       onPressed: _uploadedCount >= 2
-                          ? () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const AffiliationInfo(),
-                                ),
-                              );
-                            }
+                          ? _continueToNextStep
                           : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _uploadedCount >= 2
@@ -193,7 +205,10 @@ class _PhotosInfoState extends State<PhotosInfo> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const AffiliationInfo(),
+                          builder: (context) => AffiliationInfo(
+                            registrationData: widget.registrationData,
+                            selectedImages: const [],
+                          ),
                         ),
                       );
                     },
@@ -218,7 +233,7 @@ class _PhotosInfoState extends State<PhotosInfo> {
   Widget _buildMainPhotoSlot(int index) {
     return GestureDetector(
       onTap: () {
-        print('Tapped main photo slot $index');
+        debugPrint('Tapped main photo slot $index');
         _pickImage(index);
       },
       child: Container(
@@ -288,7 +303,7 @@ class _PhotosInfoState extends State<PhotosInfo> {
   Widget _buildPhotoSlot(int index) {
     return GestureDetector(
       onTap: () {
-        print('Tapped photo slot $index');
+        debugPrint('Tapped photo slot $index');
         _pickImage(index);
       },
       child: Container(

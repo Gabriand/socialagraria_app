@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:social_agraria/core/app_colors.dart';
+import 'package:social_agraria/models/services/supabase.dart';
+import 'package:social_agraria/controllers/user_controller.dart';
+import 'package:social_agraria/core/utils/push_notification_service.dart';
 import 'package:social_agraria/views/screens/welcome.dart';
+import 'package:social_agraria/views/screens/root.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Inicializar Supabase
+  await SupabaseService.initialize();
+
+  // Inicializar Notificaciones Locales
+  await PushNotificationService().initialize();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => UserController()..initialize(),
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -13,7 +31,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Social Agraria',
+      title: 'Social Agro',
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
@@ -22,7 +40,7 @@ class MainApp extends StatelessWidget {
         ),
         appBarTheme: AppBarTheme(elevation: 0),
       ),
-      home: const Welcome(),
+      home: SupabaseService.isAuthenticated ? const Root() : const Welcome(),
     );
   }
 }

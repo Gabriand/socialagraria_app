@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
 import 'package:social_agraria/core/app_dimens.dart';
+import 'package:social_agraria/models/services/supabase.dart';
 
 class RestorePassword extends StatefulWidget {
   const RestorePassword({super.key});
@@ -10,6 +11,47 @@ class RestorePassword extends StatefulWidget {
 }
 
 class _RestorePasswordState extends State<RestorePassword> {
+  final _emailController = TextEditingController();
+  final _authService = AuthService();
+  bool _isLoading = false;
+  bool _emailSent = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleResetPassword() async {
+    if (_emailController.text.isEmpty) {
+      _showMessage('Por favor ingresa tu correo electrónico', isError: true);
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await _authService.resetPassword(_emailController.text.trim());
+      setState(() => _emailSent = true);
+      _showMessage('Se han enviado las instrucciones a tu correo');
+    } catch (e) {
+      _showMessage('Error al enviar instrucciones', isError: true);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showMessage(String message, {bool isError = false}) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: isError ? Colors.red : Colors.green,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +90,7 @@ class _RestorePasswordState extends State<RestorePassword> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Text(
-                  "Ingresa tu correo electrónico universitario para recibir las instrucciones "
+                  "Ingresa tu correo electrónico para recibir las instrucciones "
                   "y restablecer tu contraseña.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -86,9 +128,11 @@ class _RestorePasswordState extends State<RestorePassword> {
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "tucorreo@universidad.edu",
+                          hintText: "tucorreo@email.com",
                           hintStyle: TextStyle(
                             color: AppColors.accent,
                             fontSize: AppDimens.fontSizeSubtitle,
@@ -104,13 +148,37 @@ class _RestorePasswordState extends State<RestorePassword> {
                 ),
               ),
 
+              if (_emailSent)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.check_circle, color: Colors.green),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Revisa tu bandeja de entrada',
+                            style: TextStyle(color: Colors.green[700]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
               SizedBox(height: AppDimens.spacing2XLarge),
 
               SizedBox(
                 width: double.infinity,
                 height: AppDimens.buttonHeightLarge,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : _handleResetPassword,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryDarker,
                     shape: RoundedRectangleBorder(
@@ -119,14 +187,18 @@ class _RestorePasswordState extends State<RestorePassword> {
                       ),
                     ),
                   ),
-                  child: Text(
-                    "Enviar Instrucciones",
-                    style: TextStyle(
-                      fontSize: AppDimens.fontSizeSubtitle,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.white,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: AppColors.white)
+                      : Text(
+                          _emailSent
+                              ? "Reenviar Instrucciones"
+                              : "Enviar Instrucciones",
+                          style: TextStyle(
+                            fontSize: AppDimens.fontSizeSubtitle,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.white,
+                          ),
+                        ),
                 ),
               ),
 

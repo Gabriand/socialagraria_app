@@ -5,6 +5,7 @@ import 'package:social_agraria/core/page_transitions.dart';
 import 'package:social_agraria/views/screens/root.dart';
 import 'package:social_agraria/views/screens/create_account.dart';
 import 'package:social_agraria/views/screens/restore_password.dart';
+import 'package:social_agraria/models/services/supabase.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,6 +15,70 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _authService = AuthService();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleEmailLogin() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      _showError('Por favor completa todos los campos');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await _authService.signInWithEmail(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      if (mounted) {
+        Navigator.of(
+          context,
+        ).pushReplacement(PageTransitions.fade(const Root()));
+      }
+    } catch (e) {
+      _showError('Credenciales incorrectas');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleGoogleLogin() async {
+    setState(() => _isLoading = true);
+
+    try {
+      await _authService.signInWithGoogle();
+
+      if (mounted) {
+        Navigator.of(
+          context,
+        ).pushReplacement(PageTransitions.fade(const Root()));
+      }
+    } catch (e) {
+      _showError('Error al iniciar con Google: ${e.toString()}');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showError(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +126,7 @@ class _LoginState extends State<Login> {
                   _buildInputField(
                     label: "Correo Electrónico",
                     icon: Icons.email_outlined,
+                    controller: _emailController,
                   ),
 
                   const SizedBox(height: 20),
@@ -69,6 +135,7 @@ class _LoginState extends State<Login> {
                     label: "Contraseña",
                     icon: Icons.lock_outline,
                     isPassword: true,
+                    controller: _passwordController,
                   ),
 
                   const SizedBox(height: 30),
@@ -83,15 +150,48 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     child: TextButton(
-                      onPressed: () {
-                        Navigator.of(
-                          context,
-                        ).pushReplacement(PageTransitions.fade(const Root()));
-                      },
-                      child: const Text(
-                        "Iniciar Sesión",
+                      onPressed: _isLoading ? null : _handleEmailLogin,
+                      child: _isLoading
+                          ? const CircularProgressIndicator(
+                              color: AppColors.white,
+                            )
+                          : const Text(
+                              "Iniciar Sesión",
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontSize: AppDimens.fontSizeSubtitle,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Botón de Google
+                  Container(
+                    width: double.infinity,
+                    height: AppDimens.buttonHeightLarge,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(
+                        AppDimens.radiusMedium,
+                      ),
+                      border: Border.all(color: AppColors.primaryDarker),
+                    ),
+                    child: TextButton.icon(
+                      onPressed: _isLoading ? null : _handleGoogleLogin,
+                      icon: Image.network(
+                        'https://www.google.com/favicon.ico',
+                        height: 24,
+                        width: 24,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.g_mobiledata, size: 24),
+                      ),
+                      label: const Text(
+                        "Continuar con Google",
                         style: TextStyle(
-                          color: AppColors.white,
+                          color: AppColors.primaryDarker,
                           fontSize: AppDimens.fontSizeSubtitle,
                           fontWeight: FontWeight.w600,
                         ),
@@ -166,6 +266,7 @@ class _LoginState extends State<Login> {
     required String label,
     required IconData icon,
     bool isPassword = false,
+    TextEditingController? controller,
   }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -174,6 +275,7 @@ class _LoginState extends State<Login> {
         borderRadius: BorderRadius.circular(14),
       ),
       child: TextField(
+        controller: controller,
         obscureText: isPassword,
         decoration: InputDecoration(
           icon: Icon(icon, color: AppColors.accent),

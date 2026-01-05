@@ -3,6 +3,7 @@ import 'package:social_agraria/core/app_colors.dart';
 import 'package:social_agraria/core/app_dimens.dart';
 import 'package:social_agraria/core/page_transitions.dart';
 import 'package:social_agraria/views/screens/basic_info.dart';
+import 'package:social_agraria/models/registration_data.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({super.key});
@@ -17,6 +18,52 @@ class _CreateAccountState extends State<CreateAccount> {
 
   String password = "";
   String confirmPassword = "";
+  String email = "";
+
+  bool get _isPasswordValid {
+    return password.length >= 8 &&
+        password.contains(RegExp(r'[A-Z]')) &&
+        password.contains(RegExp(r'[0-9]')) &&
+        password.contains(RegExp(r'[!@#\$%^&*(),.?\":{}|<>]'));
+  }
+
+  bool get _passwordsMatch =>
+      password == confirmPassword && password.isNotEmpty;
+
+  void _continueToNextStep() {
+    if (email.isEmpty) {
+      _showError('Por favor ingresa tu correo electrónico');
+      return;
+    }
+    if (!_isPasswordValid) {
+      _showError('La contraseña no cumple los requisitos');
+      return;
+    }
+    if (!_passwordsMatch) {
+      _showError('Las contraseñas no coinciden');
+      return;
+    }
+
+    // Crear objeto de datos de registro y pasarlo a la siguiente pantalla
+    final registrationData = RegistrationData(
+      email: email.trim(),
+      password: password,
+    );
+
+    Navigator.of(context).push(
+      PageTransitions.slideFromRight(
+        BasicInfo(registrationData: registrationData),
+      ),
+    );
+  }
+
+  void _showError(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +99,7 @@ class _CreateAccountState extends State<CreateAccount> {
             SizedBox(height: AppDimens.espacioSmall),
 
             Text(
-              "Usa tu correo electrónico institucional para comenzar.",
+              "Usa tu correo electrónico para comenzar.",
               style: TextStyle(
                 fontSize: AppDimens.fontSizeSubtitle,
                 height: 1.4,
@@ -74,9 +121,9 @@ class _CreateAccountState extends State<CreateAccount> {
 
             _inputBox(
               icon: Icons.email_outlined,
-              hint: "Correo electrónico universitario",
+              hint: "Correo electrónico",
               obscure: false,
-              onChanged: (_) {},
+              onChanged: (v) => setState(() => email = v),
             ),
 
             SizedBox(height: AppDimens.espacioLarge),
@@ -151,16 +198,16 @@ class _CreateAccountState extends State<CreateAccount> {
               height: AppDimens.buttonHeightLarge,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryDarker,
+                  backgroundColor: _isPasswordValid && _passwordsMatch
+                      ? AppColors.primaryDarker
+                      : AppColors.accent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppDimens.radiusRound),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.of(
-                    context,
-                  ).push(PageTransitions.slideFromRight(const BasicInfo()));
-                },
+                onPressed: (_isPasswordValid && _passwordsMatch)
+                    ? _continueToNextStep
+                    : null,
                 child: Text(
                   "Siguiente",
                   style: TextStyle(

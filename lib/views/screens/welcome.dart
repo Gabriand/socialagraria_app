@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
 import 'package:social_agraria/core/app_dimens.dart';
 import 'package:social_agraria/core/page_transitions.dart';
-import 'package:social_agraria/views/screens/root.dart';
 import 'package:social_agraria/views/screens/user_login.dart';
 import 'package:social_agraria/views/screens/simple_text.dart';
 
@@ -50,7 +49,7 @@ class _WelcomeState extends State<Welcome> {
             ElevatedButton(
               onPressed: () => Navigator.of(
                 context,
-              ).push(PageTransitions.fade(const Root())),
+              ).push(PageTransitions.fade(const UserLogin())),
               style: ElevatedButton.styleFrom(
                 foregroundColor: AppColors.white,
                 backgroundColor: AppColors.primary,
@@ -62,19 +61,6 @@ class _WelcomeState extends State<Welcome> {
               child: Text(
                 'Empezar',
                 style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(height: 10.0),
-            TextButton(
-              onPressed: () => Navigator.of(
-                context,
-              ).push(PageTransitions.slideFromRight(const UserLogin())),
-              child: Text(
-                'Iniciar Sesión',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
-                ),
               ),
             ),
             SizedBox(height: 40.0),

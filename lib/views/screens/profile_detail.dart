@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:social_agraria/core/app_colors.dart';
 import 'package:social_agraria/core/app_dimens.dart';
+import 'package:social_agraria/models/model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileDetail extends StatefulWidget {
-  const ProfileDetail({super.key});
+  final UserProfile profile;
+  final VoidCallback? onLike;
+  final VoidCallback? onDislike;
+
+  const ProfileDetail({
+    super.key,
+    required this.profile,
+    this.onLike,
+    this.onDislike,
+  });
 
   @override
   State<ProfileDetail> createState() => _ProfileDetailState();
@@ -12,11 +23,9 @@ class ProfileDetail extends StatefulWidget {
 class _ProfileDetailState extends State<ProfileDetail>
     with TickerProviderStateMixin {
   int currentImageIndex = 0;
-  final List<String> images = [
-    'assets/images/Erika.jpg',
-    'assets/images/Erika.jpg',
-    'assets/images/Erika.jpg',
-  ];
+
+  List<String> get images =>
+      widget.profile.photoUrls.isNotEmpty ? widget.profile.photoUrls : [''];
 
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -71,7 +80,13 @@ class _ProfileDetailState extends State<ProfileDetail>
     _animationController.forward().then((_) {
       _animationController.reverse();
       Future.delayed(const Duration(milliseconds: 200), () {
-        if (mounted) setState(() => isLikePressed = false);
+        if (mounted) {
+          setState(() => isLikePressed = false);
+          if (widget.onLike != null) {
+            widget.onLike!();
+          }
+          Navigator.pop(context, 'like');
+        }
       });
     });
   }
@@ -81,9 +96,41 @@ class _ProfileDetailState extends State<ProfileDetail>
     _animationController.forward().then((_) {
       _animationController.reverse();
       Future.delayed(const Duration(milliseconds: 200), () {
-        if (mounted) setState(() => isDislikePressed = false);
+        if (mounted) {
+          setState(() => isDislikePressed = false);
+          if (widget.onDislike != null) {
+            widget.onDislike!();
+          }
+          Navigator.pop(context, 'dislike');
+        }
       });
     });
+  }
+
+  Widget _buildProfileImage() {
+    final imageUrl = images.isNotEmpty && images[currentImageIndex].isNotEmpty
+        ? images[currentImageIndex]
+        : null;
+
+    if (imageUrl != null) {
+      return CachedNetworkImage(
+        imageUrl: imageUrl,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Container(
+          color: AppColors.accent,
+          child: const Center(child: CircularProgressIndicator()),
+        ),
+        errorWidget: (context, url, error) => Container(
+          color: AppColors.accent,
+          child: Icon(Icons.person, size: 100, color: AppColors.primaryDarker),
+        ),
+      );
+    }
+
+    return Container(
+      color: AppColors.accent,
+      child: Icon(Icons.person, size: 100, color: AppColors.primaryDarker),
+    );
   }
 
   @override
@@ -138,28 +185,26 @@ class _ProfileDetailState extends State<ProfileDetail>
                             scale: 0.95 + (_imageAnimation.value * 0.05),
                             child: Opacity(
                               opacity: 0.7 + (_imageAnimation.value * 0.3),
-                              child: Container(
+                              child: SizedBox(
                                 width: double.infinity,
                                 height: 550.0,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      images[currentImageIndex],
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    _buildProfileImage(),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          colors: [
+                                            Colors.transparent,
+                                            Colors.black.withValues(alpha: 0.1),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black.withValues(alpha: 0.1),
-                                      ],
-                                    ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -239,7 +284,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                       Row(
                         children: [
                           Text(
-                            'Laura, 22',
+                            widget.profile.displayName,
                             style: TextStyle(
                               color: AppColors.primaryDarker,
                               fontSize: AppDimens.fontSizeTitleLarge,
@@ -251,25 +296,53 @@ class _ProfileDetailState extends State<ProfileDetail>
                       SizedBox(height: AppDimens.espacioSmall),
 
                       // Universidad y facultad
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.school_outlined,
-                            color: AppColors.primaryDarker,
-                            size: 20.0,
-                          ),
-                          SizedBox(width: 8.0),
-                          Expanded(
-                            child: Text(
-                              'Universidad Complutense, Filología Inglesa',
-                              style: TextStyle(
-                                color: AppColors.primaryDarker,
-                                fontSize: AppDimens.fontSizeBody,
+                      if (widget.profile.universidad != null ||
+                          widget.profile.facultad != null)
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.apartment_outlined,
+                              color: AppColors.primaryDarker,
+                              size: 20.0,
+                            ),
+                            SizedBox(width: 8.0),
+                            Expanded(
+                              child: Text(
+                                widget.profile.affiliationInfo,
+                                style: TextStyle(
+                                  color: AppColors.primaryDarker,
+                                  fontSize: AppDimens.fontSizeBody,
+                                ),
                               ),
                             ),
+                          ],
+                        ),
+
+                      // Carrera y semestre
+                      if (widget.profile.carrera != null ||
+                          widget.profile.semestre != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.school_outlined,
+                                color: AppColors.primaryDarker,
+                                size: 20.0,
+                              ),
+                              SizedBox(width: 8.0),
+                              Expanded(
+                                child: Text(
+                                  widget.profile.academicInfo,
+                                  style: TextStyle(
+                                    color: AppColors.primaryDarker,
+                                    fontSize: AppDimens.fontSizeBody,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
                       SizedBox(height: AppDimens.espacioSmall),
 
                       // Distancia
@@ -282,7 +355,7 @@ class _ProfileDetailState extends State<ProfileDetail>
                           ),
                           SizedBox(width: 8.0),
                           Text(
-                            'A 3 km de ti',
+                            'Cerca de ti',
                             style: TextStyle(
                               color: AppColors.primaryDarker,
                               fontSize: AppDimens.fontSizeBody,
@@ -294,111 +367,130 @@ class _ProfileDetailState extends State<ProfileDetail>
                       SizedBox(height: AppDimens.espacioLarge),
 
                       // Sobre mí
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.accent,
-                          borderRadius: BorderRadius.circular(
-                            AppDimens.radiusMedium,
+                      if (widget.profile.descripcion != null &&
+                          widget.profile.descripcion!.isNotEmpty)
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: AppColors.accent,
+                            borderRadius: BorderRadius.circular(
+                              AppDimens.radiusMedium,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Sobre mí',
+                                style: TextStyle(
+                                  color: AppColors.primaryDarker,
+                                  fontSize: AppDimens.fontSizeSubtitle,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: AppDimens.espacioSmall),
+                              Text(
+                                widget.profile.descripcion!,
+                                style: TextStyle(
+                                  color: AppColors.primaryDarker,
+                                  fontSize: AppDimens.fontSizeBody,
+                                  height: 1.5,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Sobre mí',
-                              style: TextStyle(
-                                color: AppColors.primaryDarker,
-                                fontSize: AppDimens.fontSizeSubtitle,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: AppDimens.espacioSmall),
-                            Text(
-                              'Amante de los libros, el café con leche y los paseos por el Retiro. Busco a alguien con quien compartir risas y descubrir nuevas series en Netflix. 📚🎬',
-                              style: TextStyle(
-                                color: AppColors.primaryDarker,
-                                fontSize: AppDimens.fontSizeBody,
-                                height: 1.5,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
 
                       SizedBox(height: AppDimens.espacioLarge),
 
                       // Mis Intereses
-                      Text(
-                        'Mis Intereses',
-                        style: TextStyle(
-                          color: AppColors.primaryDarker,
-                          fontSize: AppDimens.fontSizeSubtitle,
-                          fontWeight: FontWeight.bold,
+                      if (widget.profile.intereses.isNotEmpty) ...[
+                        Text(
+                          'Mis Intereses',
+                          style: TextStyle(
+                            color: AppColors.primaryDarker,
+                            fontSize: AppDimens.fontSizeSubtitle,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: AppDimens.espacioMedium),
+                        SizedBox(height: AppDimens.espacioMedium),
 
-                      Wrap(
-                        spacing: 10.0,
-                        runSpacing: 10.0,
-                        children: [
-                          _buildInterestChip('Música'),
-                          _buildInterestChip('Cine'),
-                          _buildInterestChip('Deporte'),
-                          _buildInterestChip('Fotografía'),
-                          _buildInterestChip('Viajar'),
-                          _buildInterestChip('Arte'),
-                        ],
-                      ),
+                        Wrap(
+                          spacing: 10.0,
+                          runSpacing: 10.0,
+                          children: widget.profile.intereses
+                              .map((i) => _buildInterestChip(i))
+                              .toList(),
+                        ),
+                      ],
 
                       SizedBox(height: AppDimens.espacioLarge),
 
-                      // Más detalles
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.accent,
-                          borderRadius: BorderRadius.circular(
-                            AppDimens.radiusMedium,
+                      // Más detalles - Solo mostrar si hay datos
+                      if (_hasAnyDetail())
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: AppColors.accent,
+                            borderRadius: BorderRadius.circular(
+                              AppDimens.radiusMedium,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Más detalles',
+                                style: TextStyle(
+                                  color: AppColors.primaryDarker,
+                                  fontSize: AppDimens.fontSizeSubtitle,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: AppDimens.espacioMedium),
+                              if (widget.profile.alturaFormateada != null)
+                                _buildDetailRow(
+                                  Icons.height,
+                                  widget.profile.alturaFormateada!,
+                                  'Altura',
+                                ),
+                              if (widget.profile.alturaFormateada != null)
+                                SizedBox(height: AppDimens.espacioMedium),
+                              if (widget.profile.signoZodiacal != null)
+                                _buildDetailRow(
+                                  Icons.star_outline,
+                                  widget.profile.signoZodiacal!,
+                                  'Signo zodiacal',
+                                ),
+                              if (widget.profile.signoZodiacal != null)
+                                SizedBox(height: AppDimens.espacioMedium),
+                              if (widget.profile.bebe != null)
+                                _buildDetailRow(
+                                  Icons.wine_bar_outlined,
+                                  widget.profile.bebe!,
+                                  'Bebe',
+                                ),
+                              if (widget.profile.bebe != null)
+                                SizedBox(height: AppDimens.espacioMedium),
+                              if (widget.profile.fuma != null)
+                                _buildDetailRow(
+                                  Icons.smoking_rooms_outlined,
+                                  widget.profile.fuma!,
+                                  'Fuma',
+                                ),
+                              if (widget.profile.fuma != null)
+                                SizedBox(height: AppDimens.espacioMedium),
+                              if (widget.profile.buscando != null)
+                                _buildDetailRow(
+                                  Icons.favorite_outline,
+                                  widget.profile.buscando!,
+                                  'Buscando',
+                                ),
+                            ],
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Más detalles',
-                              style: TextStyle(
-                                color: AppColors.primaryDarker,
-                                fontSize: AppDimens.fontSizeSubtitle,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: AppDimens.espacioMedium),
-                            _buildDetailRow(Icons.height, '1,68 m', 'Altura'),
-                            SizedBox(height: AppDimens.espacioMedium),
-                            _buildDetailRow(
-                              Icons.star_outline,
-                              'Virgo',
-                              'Signo zodiacal',
-                            ),
-                            SizedBox(height: AppDimens.espacioMedium),
-                            _buildDetailRow(
-                              Icons.wine_bar_outlined,
-                              'Socialmente',
-                              'Bebe',
-                            ),
-                            SizedBox(height: AppDimens.espacioMedium),
-                            _buildDetailRow(
-                              Icons.favorite_outline,
-                              'Relación seria',
-                              'Buscando',
-                            ),
-                          ],
-                        ),
-                      ),
 
                       SizedBox(height: 120.0), // Espacio para los botones
                     ],
@@ -410,7 +502,7 @@ class _ProfileDetailState extends State<ProfileDetail>
 
           // Botones flotantes en la parte inferior
           Positioned(
-            bottom: 30.0,
+            bottom: 50.0,
             left: 0,
             right: 0,
             child: Row(
@@ -495,6 +587,14 @@ class _ProfileDetailState extends State<ProfileDetail>
         ],
       ),
     );
+  }
+
+  bool _hasAnyDetail() {
+    return widget.profile.altura != null ||
+        widget.profile.signoZodiacal != null ||
+        widget.profile.bebe != null ||
+        widget.profile.fuma != null ||
+        widget.profile.buscando != null;
   }
 
   Widget _buildInterestChip(String label) {
