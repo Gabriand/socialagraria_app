@@ -10,10 +10,8 @@ import 'package:social_agraria/views/screens/root.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inicializar Supabase
   await SupabaseService.initialize();
 
-  // Inicializar Notificaciones Locales
   await PushNotificationService().initialize();
 
   runApp(
